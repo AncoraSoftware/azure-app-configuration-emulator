@@ -378,3 +378,24 @@ var container = new ContainerBuilder()
 var credential = new DefaultAzureCredential();
 var client = new ConfigurationClient(endpoint, credential);
 ```
+
+Alternatively, [Assumed Identity](https://github.com/nagyesta/assumed-identity) may be used to simulate how Azure Instance Metadata Service (IMDS) handles Managed Identity tokens, enabling real Entra ID integration without an actual Azure environment.
+
+```yaml
+services:
+  assumed-identity:
+    image: nagyesta/assumed-identity
+  azure-app-configuration-emulator:
+    depends_on:
+      - assumed-identity
+    environment:
+      - ASPNETCORE_HTTP_PORTS=8080
+      - Authentication__Schemes__MicrosoftEntraId__MetadataAddress=http://assumed-identity/metadata/identity/.well-known/openid-configuration
+      - Authentication__Schemes__MicrosoftEntraId__RequireHttpsMetadata=false
+    image: tnc1997/azure-app-configuration-emulator
+```
+
+```csharp
+var credential = new ManagedIdentityCredential();
+var client = new ConfigurationClient(endpoint, credential);
+```
