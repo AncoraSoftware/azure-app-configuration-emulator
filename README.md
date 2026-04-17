@@ -335,9 +335,9 @@ var container = new ContainerBuilder()
 
 await container.StartAsync();
 
-var endpoint = new UriBuilder(Uri.UriSchemeHttp, container.Hostname, container.GetMappedPublicPort(8080)).ToString();
-var credential = new ManagedIdentityCredential();
-var client = new ConfigurationClient(new Uri(endpoint), credential);
+var endpoint = new UriBuilder(Uri.UriSchemeHttp, container.Hostname, container.GetMappedPublicPort(8080)).Uri;
+var credential = new DefaultAzureCredential();
+var client = new ConfigurationClient(endpoint, credential);
 
 await client.SetConfigurationSettingAsync(nameof(ConfigurationSetting.Key), nameof(ConfigurationSetting.Value));
 
