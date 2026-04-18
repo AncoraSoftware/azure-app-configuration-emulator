@@ -316,8 +316,7 @@ services:
 The emulator integrates with [Testcontainers](https://testcontainers.org) to ease the integration testing of applications that use Azure App Configuration.
 
 ```csharp
-var container = new ContainerBuilder()
-    .WithImage("tnc1997/azure-app-configuration-emulator:1.0")
+var container = new ContainerBuilder("tnc1997/azure-app-configuration-emulator:1.0")
     .WithPortBinding(8080, true)
     .WithWaitStrategy(Wait.ForUnixContainer().UntilMessageIsLogged("Now listening on"))
     .Build();
@@ -360,8 +359,7 @@ var client = new ConfigurationClient($"Endpoint={new UriBuilder(Uri.UriSchemeHtt
 The emulator may be configured to authenticate tokens issued by actual Entra ID by setting the metadata address, valid issuer and valid audience using the environment variables `Authentication__Schemes__MicrosoftEntraId__MetadataAddress`, `Authentication__Schemes__MicrosoftEntraId__ValidIssuer` and `Authentication__Schemes__MicrosoftEntraId__ValidAudience` respectively.
 
 ```csharp
-var container = new ContainerBuilder()
-    .WithImage("tnc1997/azure-app-configuration-emulator:1.0")
+var container = new ContainerBuilder("tnc1997/azure-app-configuration-emulator:1.0")
     .WithPortBinding(8080, true)
     .WithWaitStrategy(Wait.ForUnixContainer().UntilMessageIsLogged("Now listening on"))
     .WithEnvironment(
@@ -385,15 +383,13 @@ Alternatively, [Assumed Identity](https://github.com/nagyesta/assumed-identity) 
 var network = new NetworkBuilder()
     .Build();
 
-var assumedIdentityContainer = new ContainerBuilder()
-    .WithImage("nagyesta/assumed-identity")
+var assumedIdentityContainer = new ContainerBuilder("nagyesta/assumed-identity")
     .WithNetwork(network)
     .WithNetworkAliases("assumed-identity")
     .WithWaitStrategy(Wait.ForUnixContainer().UntilMessageIsLogged("Started AssumedIdentity"))
     .Build();
 
-var container = new ContainerBuilder()
-    .WithImage("tnc1997/azure-app-configuration-emulator:1.0")
+var container = new ContainerBuilder("tnc1997/azure-app-configuration-emulator:1.0")
     .WithPortBinding(8080, true)
     .WithNetwork(network)
     .WithWaitStrategy(Wait.ForUnixContainer().UntilMessageIsLogged("Now listening on"))
